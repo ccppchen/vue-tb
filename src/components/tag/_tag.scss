@@ -1,0 +1,66 @@
+@charset "utf-8";
+/* -------------------------------------------------
+ * bl-tag scss
+ * -------------------------------------------------
+*/
+
+
+// 变量
+//----------------------------------
+$tagBaseClass:           tag !default; //按钮的基本class
+$tagMulti:               () !default; // 1.class名称 2.边框颜色
+
+.#{$tagBaseClass} {
+  position: relative;
+  padding: 0 rem(9);
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.5;
+  font-size: rem(24);
+  display: inline-block;
+  @include transform(scale(.84));
+
+  &:after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid #c5c5c5;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 200%;
+    height: 200%;
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+    -webkit-transform-origin: left top;
+    transform-origin: left top;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+  }
+}
+
+
+@mixin tag-multi($tagMultis: $tagMulti) {
+  @each $tag in $tagMulti {
+    $class:       nth($tag,1);
+    $borColor:    nth($tag,2);
+    .#{$tagBaseClass}.#{$class} {
+      color: $borColor;
+      &:after{
+        border: 1px solid $borColor;
+      }
+    }
+  }
+}
+
+@mixin simpleTag($simpleTag: $tagMulti) {
+  $class:       nth($tagMulti,1);
+  $borColor:    nth($tagMulti,2);
+  .#{$tagBaseClass}.#{$class} {
+    color: $borColor;
+    &:after{
+      border: 1px solid $borColor;
+    }
+  }
+}

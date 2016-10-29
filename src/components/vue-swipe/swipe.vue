@@ -474,11 +474,11 @@
     height: 8px;
     display: inline-block;
     border-radius: 100%;
-    background: #000;
-    opacity: 0.2;
+    background: #ccc;
+    opacity: .8;
     margin: 0 3px;
   }
   .mint-swipe-indicator.is-active {
-    background: #fff;
+    background: #ff5501;
   }
 </style>
