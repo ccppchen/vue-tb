@@ -1,0 +1,910 @@
+@charset "UTF-8";
+//-----------------------------------------------------
+// mixin scss
+// 包括常用的mixin，%及@function
+// mixin，通过@include调用，样式通过拷贝的方式使用，尤其适用于传递参数
+// %，通过@extend调用，样式通过组合申明的方式使用，适用于不传参数的代码片段
+// @function，返回一个值，用于调用
+//-----------------------------------------------------
+
+// mixin & %
+// 既定义了mixin也定义了%，根据需求使用@include或@extend调用
+//-----------------------------------------------------
+
+// Text overflow
+// 元素可以设置宽度才可应用省略号
+%ellipsis-basic{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@mixin ellipsis($width:100%) {
+  @extend %ellipsis-basic;
+  width:$width;
+}
+@mixin clamp($num: 2) {
+  text-overflow: ellipsis;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: $num;
+}
+
+
+// triangle
+%triangle-basic{
+  content:"";
+  height: 0;
+  width: 0;
+  overflow:hidden;
+}
+@mixin triangle($direction, $size, $borderColor ) {
+  @extend %triangle-basic;
+  @if $direction == top {
+    border-bottom:$size solid $borderColor;
+    border-left:$size dashed transparent;
+    border-right:$size dashed transparent;
+  }
+  @else if $direction == right {
+    border-left:$size solid $borderColor;
+    border-top:$size dashed transparent;
+    border-bottom:$size dashed transparent;
+  }
+  @else if $direction == bottom {
+    border-top:$size solid $borderColor;
+    border-left:$size dashed transparent;
+    border-right:$size dashed transparent;
+  }
+  @else if $direction == left {
+    border-right:$size solid $borderColor;
+    border-top:$size dashed transparent;
+    border-bottom:$size dashed transparent;
+  }
+}
+
+//黑色背景色半透明
+@mixin bgcolor-alpha($bgcolor: rgba(0,0,0,.5)){
+  color:#fff;
+  @if $filter{
+    filter:progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#{ie-hex-str($bgcolor)}', endColorstr='#{ie-hex-str($bgcolor)}');
+  }@else{
+    background-color: #333;
+  }
+  background-color:$bgcolor;
+}
+%bgcolor-alpha{
+  @include bgcolor-alpha;
+}
+
+// disabled
+// 禁用样式，加!important
+@mixin disabled($bgColor:#e6e6e6,$textColor:#ababab){
+  background-color: $bgColor !important;
+  color: $textColor !important;
+  cursor: not-allowed !important;
+}
+%disabled{
+  @include disabled;
+}
+
+// 水平间隔线，适用于行列表
+@mixin horizontal-line($border:1px dashed $gray, $padding:10px){
+  border-bottom:$border;
+  padding-top:$padding;
+  padding-bottom:$padding;
+}
+%horizontal-line{
+  @include horizontal-line;
+}
+
+
+// mixin
+// 只定义了mixin，所以只能通过@include来调用
+//-----------------------------------------------------
+
+// rem
+// thanks:http://drublic.de/blog/rem-fallback-sass-less/;
+// @include rem(width,20)   ->   width: 280px; width: 20rem;
+@mixin rem($property, $px) {
+  #{$property}: $px * $baseFontSize;
+  #{$property}: #{$px}rem;
+}
+// @include rem-font-size(2)  ->  font-size: 28px; font-size: 2rem;
+@mixin rem-font-size($px) {
+  font-size: $px * $baseFontSize;
+  font-size: #{$px}rem;
+}
+
+//最小高度
+@mixin min-height($height){
+  min-height: $height;
+  height: auto !important;
+  @if $lte7{
+    _height: $height;
+  }
+}
+
+// Retina images.
+// @include image-2x("../images/img-2x.png", 200px, 200px);
+// Use with care - http://37signals.com/svn/posts/3271-easy-retina-ready-images-using-scss
+@mixin image-2x($url, $width, $height) {
+  @media (min--moz-device-pixel-ratio: 1.3),
+         (-o-min-device-pixel-ratio: 2.6/2),
+         (-webkit-min-device-pixel-ratio: 1.3),
+         (min-device-pixel-ratio: 1.3),
+         (min-resolution: 1.3dppx) {
+    // on retina, use image that's scaled by 2
+    background-image: url('#{$url}');
+    background-size: $width $height;
+  }
+}
+
+// 针对火狐浏览器打bug
+// @include firefox{.test{padding-bottom:3px;}}
+@mixin firefox {
+  @-moz-document url-prefix(){
+    @content;
+  }
+}
+
+
+// %
+// 只定义了%，所以只能通过@extend来调用
+//-----------------------------------------------------
+
+//为高级浏览器准备的box-sizing盒子模型，ie8+
+%box-sizing-border{
+  @include box-sizing;
+}
+
+// 普通all transition特效
+%all-transition{
+  @include transition;
+}
+
+// ie6/7 haslayout
+%zoom{
+  @if $lte7 {
+    *zoom:1;
+  }
+}
+
+// 垂直渐变，渐变背景是半透明到全透明，这样就可以通过设置背景色来表现渐变
+//-------------------------
+// 白色，由半透明到全透明
+%gradient-linear-light {
+  // IE9 SVG, needs conditional override of 'filter' to 'none'
+  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjMiLz4KICAgIDxzdG9wIG9mZnNldD0iNDYlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+  @include gradient-vertical(rgba(255,255,255,0.3),rgba(255,255,255,0));
+  @if $filter{
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4dffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-8 */
+    :root &{
+      @extend %reset-filter;
+    }
+  }
+}
+// 黑色，由全透明到半透明
+%gradient-linear-dark {
+  // IE9 SVG, needs conditional override of 'filter' to 'none'
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMC4yNSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  @include gradient-vertical(rgba(0,0,0,0), rgba(0,0,0,0.25));
+  @if $filter{
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#40000000',GradientType=0 ); /* IE6-8 */
+    :root &{
+       @extend %reset-filter;
+    }
+  }
+}
+// Reset gradient filters for IE
+%reset-filter{
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+
+//function
+//-----------------------------------------------------
+
+// px转em
+@function pxToEm($px, $base: 16) {
+  @return ($px / $base) * 1em;
+}
+
+// px转rem
+@function rem($px, $remBase: $remBase) {
+  @return ($px / $remBase) * 1rem;
+}
+
+// 为颜色添加白色，以百分比形式
+@function tint($color, $percent){
+  @return mix(white, $color, $percent);
+}
+
+// 为颜色添加黑色，以百分比形式
+@function shade($color, $percent){
+  @return mix(black, $color, $percent);
+}
+
+
+// 定义一些常见元素的简单样式(btn,table,form)
+// 这里只是满足简单的使用，更全更好的请参考各自的组件
+//-----------------------------------------------------
+
+// btn
+// @include simple-btn;
+// @include simple-btn(true);
+// @include simple-btn($bgColor:$green);
+@mixin simple-btn($formbtn:false, $bgColor: $primary, $textColor:$white){
+  @include inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  text-align: center;
+
+  font-size: 12px;
+  padding:0  15px;
+  @if $formbtn {
+    height: 28px;
+  }@else{
+    line-height: 28px;
+  }
+  color: $textColor;
+  background-color: $bgColor;
+  border:0 none;
+
+  &:hover{
+    color: $textColor;
+    background-color: darken($bgColor,5%);
+  }
+}
+
+// table
+// @include simple-table;
+// @include simple-table(false);
+// @include simple-table(true, $thBgColor: $orange);
+@mixin simple-table($th:true, $borderColor: $gray, $thBgColor: $primary, $thTextColor:$white){
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: $baseGap;
+
+  & th,
+  & td{
+    border:1px solid $borderColor;
+  }
+
+  th,td{
+    padding: 8px;
+    text-align: left;
+  }
+  // 如果
+  @if $th{
+    th{
+      color: $thTextColor;
+      background-color: $thBgColor;
+      border-color:$thBgColor;
+      border-bottom:0 none;
+    }
+  }
+}
+
+// input, select, textarea的基础样式
+// 边框，padding
+%simple-form-basic{
+  border: 1px solid $gray;
+  padding: 4px;
+  vertical-align: middle;
+  &:focus{
+    outline: 0 none;
+  }
+}
+
+// 输入框
+@mixin simple-text($borderColorFocus: #52a8ec){
+  @extend %simple-form-basic;
+  height: 18px;
+
+  @include transition(border linear 0.2s, box-shadow linear 0.2s);
+  @include box-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.1));
+
+  &:focus{
+    border-color: rgba($borderColorFocus, 0.8);
+    @include box-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba($borderColorFocus, 0.6));
+  }
+}
+%simple-text{
+  @include simple-text;
+}
+
+// textarea
+@mixin simple-textarea($borderColorFocus:#52a8ec, $width:500px, $height:80px){
+  @include simple-text($borderColorFocus);
+  height: $height;
+  width: $width;
+  vertical-align: top;
+}
+%simple-textarea{
+  @include simple-textarea;
+}
+
+// select
+%simple-select{
+  @extend %simple-form-basic;
+
+  // select lte ie7
+  // ie6,7 不支持select的padding
+  @if $lte7 {
+      *margin-top:5px;
+      *margin-bottom:5px;
+      *vertical-align:top;
+  }
+}
+
+// radio & checkbox 的重置
+%reset-radio-checkbox{
+  margin:0 5px 0 0;
+  padding:0;
+  font-size: 13px;
+  //ie6,7得设置宽度和高度才能表现和其他浏览器一样的重置
+  //radio和checkbox的大小为13px
+  @if $lte7 {
+    *width:13px;
+    *height:13px;
+  }
+}
+
+// retain屏幕1px像素边框解决方案 用法
+// .exam{
+//   @include hairline(bottom, #ccc);
+// }
+@mixin hairline($position, $color: #ccc) {
+  @if $position == 'top' {
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: auto;
+        right: auto;
+        height: 1px;
+        width: 100%;
+        background-color: $color;
+        display: block;
+        z-index: 15;
+        transform-origin: 50% 0%;
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+          transform: scaleY(0.5);
+        }
+    }
+  }
+
+  @if $position == 'left' {
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: auto;
+        right: auto;
+        width: 1px;
+        height: 100%;
+        background-color: $color;
+        display: block;
+        z-index: 15;
+        transform-origin: 0% 50%;
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+            transform: scaleX(0.5);
+        }
+
+    }
+  }
+
+  @if $position == 'bottom' {
+    &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: auto;
+        top: auto;
+        height: 1px;
+        width: 100%;
+        background-color: $color;
+        display: block;
+        z-index: 15;
+        transform-origin: 50% 100%;
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+          transform: scaleY(0.5);
+        }
+    }
+  }
+
+  @if $position == 'right' {
+    &:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        left: auto;
+        bottom: auto;
+        width: 1px;
+        height: 100%;
+        background-color: $color;
+        display: block;
+        z-index: 15;
+        transform-origin: 100% 50%;
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+            transform: scaleX(0.5);
+        }
+
+    }
+  }
+
+}
+// For right and bottom
+@mixin hairline-remove($position) {
+  @if $position != left and $position != top {
+    &:after {
+        display: none;
+    }
+  }
+  @if $position != right and $position != bottom {
+    &:before {
+        display: none;
+    }
+  }
+
+}
+// For right and bottom
+@mixin hairline-color($position, $color) {
+    @if $position != left and $position != top {
+      &:after {
+          background-color: $color;
+      }
+    }
+    @if $position != right and $position != bottom {
+      &:before {
+          background-color: $color;
+      }
+    }
+}
+// background方法解决0.5px边框问题
+@mixin hair($pos, $color) {
+  border: none;
+  background-image: linear-gradient(0deg, $color, $color 50%, transparent 50%);
+  background-position: $pos;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  @if $pos != left and $pos != right {
+    background-size: 100% 1px;
+  }
+  @if $pos != top and $pos != bottom {
+    background-size: 1px 100%;
+  }
+}
+// @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+//     transform: scaleY(0.5);
+// }
+// @media only screen and (-webkit-min-device-pixel-ratio: 3) {
+//     transform: scaleY(0.33);
+// }
+// Bar Mixins
+// --------------------------------------------------
+
+@mixin bar-style($bg-color, $border-color, $color) {
+  border-color: $border-color;
+  background-color: $bg-color;
+  background-image: linear-gradient(0deg, $border-color, $border-color 50%, transparent 50%);
+  color: $color;
+
+  .title {
+    color: $color;
+  }
+}
+
+
+// Button Mixins
+// --------------------------------------------------
+
+@mixin button-style($bg-color, $border-color, $active-bg-color, $active-border-color, $color) {
+  border-color: $border-color;
+  background-color: $bg-color;
+  color: $color;
+
+  // Give desktop users something to play with
+  &:hover {
+    color: $color;
+    text-decoration: none;
+  }
+  &.active,
+  &.activated,
+  &:active {
+    border-color: $active-border-color;
+    background-color: $active-bg-color;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+  }
+}
+
+@mixin button-clear($color, $font-size:"") {
+  &.button-clear {
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+    color: $color;
+
+    @if $font-size != "" {
+      font-size: $font-size;
+    }
+  }
+  &.button-icon {
+    border-color: transparent;
+    background: none;
+  }
+}
+
+@mixin button-outline($color, $text-color:"") {
+  &.button-outline {
+    border-color: $color;
+    background: transparent;
+    @if $text-color == "" {
+      $text-color: $color;
+    }
+    color: $text-color;
+    &.active,
+    &.activated {
+      background-color: $color;
+      box-shadow: none;
+      color: #fff;
+    }
+  }
+}
+
+/* --------------------------------------------------
+ * 非输出
+ */
+ // Add `.grid` for sthe table
+ %table {
+   display: table;
+   width: 100%;
+   table-layout: fixed;
+ }
+
+ // Add `.col` for the table cells, or columns
+ %table-col {
+   display: table-cell;
+ }
+
+ // Padded columns
+ %table-padded {
+   margin-left:  -1rem;
+   margin-right: -1rem;
+ }
+ %table-padded .table {
+   border-spacing: 1rem 0;
+ }
+
+ %col-1 { width: 8.333333%; }
+ %col-2 { width: 16.666667%; }
+ %col-3 { width: 25%; }
+ %col-4 { width: 33.333333%; }
+ %col-5 { width: 41.666667%; }
+ %col-6 { width: 50%; }
+ %col-7 { width: 58.333333%; }
+ %col-8 { width: 66.666667%; }
+ %col-9 { width: 75%; }
+ %col-10 { width: 83.333333%; }
+ %col-11 { width: 91.666667%; }
+
+
+ // Vertically center grid content
+ //
+ // Requires content within the column to be inline or inline-block.
+
+ %table-align-middle .table-col {
+   vertical-align: middle;
+ }
+
+
+ //
+ // Reverse column sorting
+ //
+
+ %table-reverse {
+   direction: rtl;
+ }
+
+ %table-reverse .col {
+   direction: ltr;
+ }
+
+ // comm flex
+ %comm-flex{
+   @include display(flex);
+   @include align-items(center);
+ }
+// bar span
+%button.bor-radius .iconfont{
+  @extend %comm-flex;
+  @include justify-content(center);
+  width: rem(52);
+  height: rem(52);
+  background-color: #cccccc;
+  border-radius: 100px;
+}
+%button.bor-radius .iconfont.arrow-back:before{
+  margin-left: -2px;
+}
+
+%max-width {
+    width: 100%;
+    max-width: 750px;
+    min-width: 320px;
+    overflow-x: hidden;
+    margin: 0 auto;
+}
+
+// tag
+%tag {
+    padding: rem(6) rem(12);
+    font-size: rem(20);
+    margin: 0 rem(14);
+    vertical-align: middle;
+    color: #ffffff;
+    border-radius: 3px;
+}
+
+// 灰色透明背景遮罩
+@mixin mask($opt: .6, $z-index: 1000) {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(#000000, $opt);
+    z-index: $z-index;
+    display: none;
+}
+
+// input check
+@mixin check-color($bgColor) {
+    background-color: $bgColor;
+    border-color: $bgColor;
+}
+%check-input {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 1px solid #afb3c2;
+    border-radius: 100%;
+    width: rem(34);
+    height: rem(34);
+    margin-right: rem(16);
+    @include display(flex);
+    @include align-items(center);
+    @include justify-content(center);
+    position: relative;
+    &:checked {
+        background-color: $green;
+        border-color: $green;
+    }
+    &.check-red:checked {
+        @include check-color($red);
+    }
+    &:checked:after {
+        content: '';
+        width: rem(16);
+        height: rem(8);
+        border-left: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+        -webkit-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        position: absolute;
+        left: rem(8);
+        top: rem(10);
+        z-index: 99;
+    }
+}
+
+// btn-disabled
+%btn-disabled {
+    background-color: #e1e1e1;
+    color: #aaa;
+}
+
+// 右箭头
+%arrow-default {
+    padding-right: rem(25);
+}
+
+%arrow-right {
+    background: inline-image("base64/arrow.png") no-repeat right center;
+    background-size: rem(16) auto;
+    @extend %arrow-default;
+}
+
+%arrow-white-right {
+    background: inline-image("base64/arrow-white-right.png") no-repeat right center;
+    background-size: rem(16) auto;
+    @extend %arrow-default;
+}
+
+%arrow-down {
+    background: inline-image("base64/down.png") no-repeat right center;
+    background-size: rem(16) auto;
+    @extend %arrow-default;
+}
+
+%arrow-up {
+    background: inline-image("base64/up.png") no-repeat right center;
+    background-size: rem(16) auto;
+    @extend %arrow-default;
+}
+
+// 返回顶部
+%cp-gotop {
+    position: fixed;
+    right: rem(30);
+    bottom: - rem(220);
+    z-index: 20;
+    width: rem(100);
+    height: rem(100);
+    background-image: url('data:image/png;base64,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');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+%gotop {
+    position: fixed;
+    display: none;
+    right: rem(20);
+    bottom: rem(142);
+    z-index: 20;
+    width: rem(72);
+    height: rem(72);
+    background-image: inline-image("base64/go-top.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 1002;
+}
+
+// 懒加载
+%lazy-box {
+    position: relative;
+    background: #FFF url('data:image/png;base64,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') no-repeat center center;
+    background-size: rem(100);
+    &:after {
+        content: '';
+        display: block;
+        padding-top: 100%;
+    }
+    &.half:after {
+        padding-top: 50%;
+    }
+    .lazy,.lazy-x {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        @include transform(translate3d(-50%, -50%, 0)!important);
+    }
+}
+
+// tab-group
+%tab-group {
+    @extend %comm-flex;
+    .tab-item {
+        @include flex(1);
+        width: 0;
+        @extend %comm-flex;
+        @include justify-content(center);
+        height: 100%;
+        padding: 0;
+        border: 0;
+        outline: 0;
+    }
+}
+
+// 商品列表，里面4个参数分别为：外盒子类名，想要几列，背景色，间隙, 内盒子类名
+// .pic-list>ul>(li>.list-bg)*3
+@mixin pic-list( $class: pic-list, $col: 2, $bg: #ffffff, $padding: rem(20), $listbg-class: list-bg ) {
+    .#{"" + $class}{
+        width: 100%;
+        ul{
+            font-size: 0;
+            overflow: hidden;
+            margin-left: - $padding;
+            li{
+                padding-left: $padding;
+                display: inline-block;
+                margin-bottom:$padding;
+                width: (1 / $col)*100%;
+                vertical-align: top;
+            }
+            .#{"" + $listbg-class}{
+                background: $bg;
+                font-size: rem(28);
+            }
+        }
+    }
+
+}
+
+%transform-middle{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  @include transform(translate(-50%,-50%));
+}
+
+%total-modal{
+  background-color: rgba(#000000, .8);
+  font-size: rem(32);
+  color: #ffffff;
+  padding: rem(24) rem(10);
+  width: rem(540);
+  text-align: center;
+  border-radius: rem(8);
+  position: fixed;
+  z-index: 101;
+  left: 50%;
+  top: 45%;
+  margin-left: rem(-270);
+}
+
+%content {
+    width: 100%;
+    padding-top: $bar-height;
+}
+
+// toast
+%toast {
+  position: fixed;
+  z-index: 10004;
+  bottom: 25%;
+  left: 50%;
+  @include transform(translate(-50%,0));
+  padding: rem(22) rem(40);
+  min-width: rem(290);
+  min-height: rem(88);
+  max-width: 90%;
+  font-family: PingFang-SC-Regular;
+  font-size: rem(30);
+  color: #FFFFFF;
+  background: rgba(0,0,0,0.80);
+  border-radius: 8px;
+  text-align: center;
+}
+
+// z-link a
+%z-link{
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+@mixin full-line($borColor: #cfcfcf, $bgColor: #ffffff, $radius: 8px) {
+  &:after{
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    border: 1px solid $borColor;
+    background-color: $bgColor;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 200%;
+    height: 200%;
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+    -webkit-transform-origin: left top;
+    transform-origin: left top;
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+  }
+}

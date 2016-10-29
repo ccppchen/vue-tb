@@ -1,0 +1,48 @@
+@charset "utf-8";
+
+/* -------------------------------------------------
+ * input scss
+ * -------------------------------------------------
+*/
+
+// 变量
+//----------------------------------
+$triangleBaseClass: 		triangle !default; //按钮的基本class
+$triangleSize: 				(left .26rem 2px #848689) (right .26rem 1px #333) (top .26rem 1px #333) (bottom .26rem 1px #333) !default; //((left 10px 1px #333)) 每个括号为一组，里面四个参数分别为：方向 宽度高度 边框大小 颜色
+
+
+// 基础输入框样式
+@mixin triangle-size($size, $border, $borderColor) {
+    position: relative;
+    display: inline-block;
+    width: $size;
+    height: $size;
+    border-top: $border solid $borderColor;
+    border-right: $border solid $borderColor;
+}
+// 如果输出多个大小输入框，则直接调用下面的mixin
+// @include input-size-multi();
+@mixin triangle-size-multi($sizeLists: $triangleSize){
+  @each $size in $sizeLists{
+    $class:			nth($size, 1);
+    $Tsize:		    nth($size, 2);
+    $border:		nth($size, 3);
+    $borderColor:  	nth($size, 4);
+
+    .#{$triangleBaseClass}-#{$class}{
+      @include triangle-size($Tsize, $border, $borderColor);
+      @if $class == "right" {
+          @include transform(rotate(45deg));
+      } @else if $class == "top"{
+          @include transform(rotate(-45deg));
+      } @else if $class == "bottom"{
+          @include transform(rotate(135deg));
+      } @else if $class == "left" {
+          @include transform(rotate(-135deg));
+      }
+
+    }
+  }
+}
+
+@include triangle-size-multi();
