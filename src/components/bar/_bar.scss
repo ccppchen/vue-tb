@@ -92,6 +92,9 @@
     border: 0;
     background-color: transparent;
     color: #848689;
+    &.small-button{
+      font-size: rem(28);
+    }
     &:active{
       opacity: .6;
     }

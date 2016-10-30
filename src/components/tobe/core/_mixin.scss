@@ -719,26 +719,26 @@
     padding-right: rem(25);
 }
 
-%arrow-right {
-    background: inline-image("base64/arrow.png") no-repeat right center;
+%arrow-forward {
+    background: url("../../assets/arrow.png") no-repeat right center;
     background-size: rem(16) auto;
     @extend %arrow-default;
 }
 
 %arrow-white-right {
-    background: inline-image("base64/arrow-white-right.png") no-repeat right center;
+    background: url("../../assets/arrow-white-right.png") no-repeat right center;
     background-size: rem(16) auto;
     @extend %arrow-default;
 }
 
 %arrow-down {
-    background: inline-image("base64/down.png") no-repeat right center;
+    background: url("../../assets/down.png") no-repeat right center;
     background-size: rem(16) auto;
     @extend %arrow-default;
 }
 
 %arrow-up {
-    background: inline-image("base64/up.png") no-repeat right center;
+    background: url("../../assets/up.png") no-repeat right center;
     background-size: rem(16) auto;
     @extend %arrow-default;
 }
@@ -764,7 +764,7 @@
     z-index: 20;
     width: rem(72);
     height: rem(72);
-    background-image: inline-image("base64/go-top.png");
+    background-image: url("../../assets/go-top.png");
     background-repeat: no-repeat;
     background-size: contain;
     z-index: 1002;

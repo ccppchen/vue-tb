@@ -16,12 +16,14 @@
 <script lang="babel">
   import Home from './home';
   import Class from './class';
+  import My from './my';
   import { PageFooter } from '../components/footer';
   export default {
     components: {
       'home': Home,
       'class': Class,
       PageFooter,
+      My,
     },
     data() {
       return {

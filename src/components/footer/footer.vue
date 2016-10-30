@@ -4,7 +4,7 @@
   </footer>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../tobe/function";
 .footer + .page-content,.footer ~ .page-content{
   bottom: rem(100);

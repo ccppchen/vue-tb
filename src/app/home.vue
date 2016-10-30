@@ -18,95 +18,109 @@
       </div>
     </div>
     <page-content>
+      <scroll :on-refresh="onRefresh" :on-infinite="onInfinite">
 
-      <swipe class="my-swipe" :prevent="true">
-        <swipe-item v-for="swipeItem in data.swipeItems">
-          <a :href="swipeItem.url">
-            <img v-lazy="swipeItem.img">
-          </a>
-        </swipe-item>
-      </swipe>
-      <div class="vertical-view">
-        <div class="vertical-item" v-for="item in data.items">
-          <router-link :to="item.url">
-            <div class="vitem-img"><img :src="item.img"></div>
-            <div class="vitem-text">{{ item.text }}</div>
-          </router-link>
-        </div>
-      </div>
-      <div class="flash-box">
-        <div class="flash-box-title"><img src="static/assets/images/tb-toutiao.png"></div>
-        <div class="flash-box-inner">
-          <tag>双十一</tag><div class="flash-text">全球食记丨因味爱上一座城</div>
-        </div>
-      </div>
-      <div class="buy-flash">
-        <div class="buy-rob">
-          <router-link :to="data.buyFlashs.flashBuy.url"><img :src="data.buyFlashs.flashBuy.img"></router-link>
-        </div>
-        <div class="buy-list grid grid-two">
-          <div class="buy-list-item grid-item" v-for="flashList in data.buyFlashs.flashLists">
-            <router-link :to="flashList.url"><img :src="flashList.img"></router-link>
+        <swipe class="my-swipe" :prevent="true">
+          <swipe-item v-for="swipeItem in data.swipeItems">
+            <a :href="swipeItem.url">
+              <img v-lazy="swipeItem.img">
+            </a>
+          </swipe-item>
+        </swipe>
+        <div class="vertical-view">
+          <div class="vertical-item" v-for="item in data.items">
+            <router-link :to="item.url">
+              <div class="vitem-img"><img :src="item.img"></div>
+              <div class="vitem-text">{{ item.text }}</div>
+            </router-link>
           </div>
         </div>
-      </div>
-
-      <div class="column bargain">
-        <div class="column-padd">
-          <div class="column-title">超实惠</div>
-        </div>
-        <div class="bargain-inner grid">
-          <div class="bargain-left grid">
-            <div class="grid-item" v-for="bargainLeft in data.bargains.bargainLefts">
-              <router-link :to="bargainLeft.url"><img v-lazy="bargainLeft.img"></router-link>
-            </div>
+        <div class="flash-box">
+          <div class="flash-box-title"><img src="static/assets/images/tb-toutiao.png"></div>
+          <div class="flash-box-inner">
+            <tag>双十一</tag><div class="flash-text">全球食记丨因味爱上一座城</div>
           </div>
-          <div class="bargain-right grid grid-three">
-            <div class="grid-item" v-for="bargainRight in data.bargains.bargainRights">
-              <router-link :to="bargainRight.url"><img v-lazy="bargainRight.img"></router-link>
+        </div>
+        <div class="buy-flash">
+          <div class="buy-rob">
+            <router-link :to="data.buyFlashs.flashBuy.url"><img :src="data.buyFlashs.flashBuy.img"></router-link>
+          </div>
+          <div class="buy-list grid grid-two">
+            <div class="buy-list-item grid-item" v-for="flashList in data.buyFlashs.flashLists">
+              <router-link :to="flashList.url"><img :src="flashList.img"></router-link>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="column special">
-        <div class="column-padd">
-          <div class="column-title">特色好货</div>
-        </div>
-        <div class="bargain-inner grid">
-          <div class="bargain-left grid">
-            <div class="grid-item" v-for="specialLeft in data.specials.specialLefts">
-              <router-link :to="specialLeft.url"><img v-lazy="specialLeft.img"></router-link>
+        <div class="column bargain">
+          <div class="column-padd">
+            <div class="column-title">超实惠</div>
+          </div>
+          <div class="bargain-inner grid">
+            <div class="bargain-left grid">
+              <div class="grid-item" v-for="bargainLeft in data.bargains.bargainLefts">
+                <router-link :to="bargainLeft.url"><img v-lazy="bargainLeft.img"></router-link>
+              </div>
+            </div>
+            <div class="bargain-right grid grid-three">
+              <div class="grid-item" v-for="bargainRight in data.bargains.bargainRights">
+                <router-link :to="bargainRight.url"><img v-lazy="bargainRight.img"></router-link>
+              </div>
             </div>
           </div>
-          <div class="bargain-right grid grid-three">
-            <div class="grid-item" v-for="specialRight in data.specials.specialRights">
-              <router-link :to="specialRight.url"><img v-lazy="specialRight.img"></router-link>
+        </div>
+
+        <div class="column special">
+          <div class="column-padd">
+            <div class="column-title">特色好货</div>
+          </div>
+          <div class="bargain-inner grid">
+            <div class="bargain-left grid">
+              <div class="grid-item" v-for="specialLeft in data.specials.specialLefts">
+                <router-link :to="specialLeft.url"><img v-lazy="specialLeft.img"></router-link>
+              </div>
+            </div>
+            <div class="bargain-right grid grid-three">
+              <div class="grid-item" v-for="specialRight in data.specials.specialRights">
+                <router-link :to="specialRight.url"><img v-lazy="specialRight.img"></router-link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <swipe class="swipead-swipe" :prevent="true" :showIndicators="false">
-        <swipe-item v-for="swipeAdItem in data.swipeAdItems">
-          <a :href="swipeAdItem.url">
-            <img v-lazy="swipeAdItem.img">
-          </a>
-        </swipe-item>
-      </swipe>
+        <swipe class="swipead-swipe" :prevent="true" :showIndicators="false">
+          <swipe-item v-for="swipeAdItem in data.swipeAdItems">
+            <a :href="swipeAdItem.url">
+              <img v-lazy="swipeAdItem.img">
+            </a>
+          </swipe-item>
+        </swipe>
 
-      <!-- 猜你喜欢 -->
-      <div class="column love">
-        <div class="column-padd">
-          <div class="column-title">猜你喜欢</div>
-          <div class="column-text">实时推荐最适合你的宝贝</div>
-        </div>
-        <div class="love-inner grid grid-two">
-          <div class="grid-item">
-            <a><img src="https://gw.alicdn.com/tps/TB1CPtJMXXXXXcAXFXXXXXXXXXX-1125-225.png"></a>
+        <!-- 猜你喜欢 -->
+        <div class="column love">
+          <div class="column-padd">
+            <div class="column-title">猜你喜欢</div>
+            <div class="column-text">实时推荐最适合你的宝贝</div>
           </div>
         </div>
-      </div>
+        <similar :similarColumn="'similar-two'" :myClass="'love-inner'">
+          <similar-item v-for="similar in similars">
+            <a :href="similar.url">
+              <div class="similar-img"><img v-lazy="similar.img"></div>
+              <div class="similar-title"><tag v-if="similar.tag !== ''">{{ similar.tag }}</tag>{{ similar.title }}</div>
+            </a>
+            <div class="similar-price">
+                <span class="small-rmb">¥</span>{{ similar.now_price }}
+                <div class="join-cart">
+                  <div class="similar-maney">{{ similar.maney }}人付款</div>
+                  <div class="iconfont more-v"></div>
+                </div>
+
+            </div>
+          </similar-item>
+        </similar>
+
+      </scroll>
 
     </page-content>
 
@@ -117,7 +131,8 @@
 import { Page, PageContent } from '../components/page';
 import { Swipe, SwipeItem } from '../components/vue-swipe';
 import Tag from '../components/tag';
-import vue from 'vue';
+import { Similar, SimilarItem } from '../components/similar';
+import Scroll from '../components/scroll';
 export default {
   components: {
     Page,
@@ -125,6 +140,9 @@ export default {
     Swipe,
     SwipeItem,
     Tag,
+    Similar,
+    SimilarItem,
+    Scroll,
   },
   data() {
     return {
@@ -191,58 +209,43 @@ export default {
             { url: "/class", img: "https://img.alicdn.com/imgextra/i4/97/TB2xb_0kXXXXXcQXpXXXXXXXXXX_!!2-subaru.png" },
           ],
         },
-
-
       },
+      similars: [
+        { url: "https://item.taobao.com/item.htm?locate=guessitem-item&spm=a215s.7406091.guessitem.guessitem-0&scm=2027.10987.56932.0&id=525331358959&pvid=2d465ace-9a2c-456c-91af-07012f629c14", img: "//img.alicdn.com/bao/uploaded/i1/1814877258/TB2VBvCqXXXXXXlXFXXXXXXXXXX_!!1814877258.jpg_q50.jpg", title: "出口北欧简欧现代简约创意设计师家具懒人休闲椅单人沙发椅蝴蝶椅", now_price: "618.0", old_price: "111.00", maney: "11789",tag: '热销' },
+        { url: "https://item.taobao.com/item.htm?locate=guessitem-item&spm=a215s.7406091.guessitem.guessitem-11&scm=2027.10987.56932.0&id=40448287184&pvid=92086df9-d82f-4d1c-96aa-2a5265ec3b06", img: "//img.alicdn.com/bao/uploaded/i2/TB1YlaiGXXXXXcmXpXXXXXXXXXX_!!0-item_pic.jpg_q50.jpg", title: "愫居  实木储物架 组合置物架 黑胡桃 橡木木蜡油 环保 实体店", now_price: "2185.0", old_price: "111.00", maney: "22", tag: '热销' },
+        { url: "https://item.taobao.com/item.htm?locate=guessitem-item&spm=a215s.7406091.guessitem.guessitem-15&scm=2027.10987.56932.0&id=44770809803&pvid=92086df9-d82f-4d1c-96aa-2a5265ec3b06", img: "//img.alicdn.com/bao/uploaded/i4/851960095/TB2lOFUgVXXXXaEXpXXXXXXXXXX_!!851960095.jpg_q50.jpg", title: "[为你推荐]北欧风格家具 小户型真皮沙发简约皮艺组合韩式双三人位头层牛皮", now_price: "3599.0", old_price: "111.00", maney: "22", tag: '热销' },
+        { url: "https://mclick.simba.taobao.com/cc_im?p=iphone7&s=1381095274&k=289&e=VKtxAOAXQp76tcv4X0wDkpvITRdkOaqZzrPlqVOg5EeyR08VbxXX4e6nTUMqj%2FdPMNE4YJm527ZpNANDY4nOsAjyVKf%2Fc1%2BnLavBN2kQWSguvgH9egsj6E3%2B8mjnYYh7H571VV4Bua7hvpXe3ExMUNlz2SVqR5vlZE%2Bi%2FJWqdra2Zfj5T0tx2rYfuvD6NFdANrjn1LiVf5Fo5FAyj%2FR7f4ORkeiu%2FMPfVSgoxQlL%2BvIyi05lBIdG9dm1O9VfvX3WtapqpTSx0NELG%2FLVqUmcls45%2BdfGSC6G", img: "//img.alicdn.com/imgextra/i3/146120309408356475/TB2XwucbcCO.eBjSZFzXXaRiVXa_!!0-saturn_solar.jpg_210x210.jpg", title: "Apple/苹果 iPhone 7 港版国行现货当天发", now_price: "4388.0", old_price: "4523.71", maney: "22", tag: '热销' },
+        { url: "https://item.taobao.com/item.htm?locate=guessitem-item&spm=a215s.7406091.guessitem.guessitem-0&scm=2027.10987.56932.0&id=525331358959&pvid=2d465ace-9a2c-456c-91af-07012f629c14", img: "//img.alicdn.com/bao/uploaded/i1/1814877258/TB2VBvCqXXXXXXlXFXXXXXXXXXX_!!1814877258.jpg_q50.jpg", title: "出口北欧简欧现代简约创意设计师家具懒人休闲椅单人沙发椅蝴蝶椅", now_price: "618.0", old_price: "111.00", maney: "11789",tag: '热销' },
+        { url: "https://item.taobao.com/item.htm?locate=guessitem-item&spm=a215s.7406091.guessitem.guessitem-11&scm=2027.10987.56932.0&id=40448287184&pvid=92086df9-d82f-4d1c-96aa-2a5265ec3b06", img: "//img.alicdn.com/bao/uploaded/i2/TB1YlaiGXXXXXcmXpXXXXXXXXXX_!!0-item_pic.jpg_q50.jpg", title: "愫居  实木储物架 组合置物架 黑胡桃 橡木木蜡油 环保 实体店", now_price: "2185.0", old_price: "111.00", maney: "22", tag: '热销' },
+        { url: "https://item.taobao.com/item.htm?locate=guessitem-item&spm=a215s.7406091.guessitem.guessitem-15&scm=2027.10987.56932.0&id=44770809803&pvid=92086df9-d82f-4d1c-96aa-2a5265ec3b06", img: "//img.alicdn.com/bao/uploaded/i4/851960095/TB2lOFUgVXXXXaEXpXXXXXXXXXX_!!851960095.jpg_q50.jpg", title: "[为你推荐]北欧风格家具 小户型真皮沙发简约皮艺组合韩式双三人位头层牛皮", now_price: "3599.0", old_price: "111.00", maney: "22", tag: '热销' },
+        { url: "https://mclick.simba.taobao.com/cc_im?p=iphone7&s=1381095274&k=289&e=VKtxAOAXQp76tcv4X0wDkpvITRdkOaqZzrPlqVOg5EeyR08VbxXX4e6nTUMqj%2FdPMNE4YJm527ZpNANDY4nOsAjyVKf%2Fc1%2BnLavBN2kQWSguvgH9egsj6E3%2B8mjnYYh7H571VV4Bua7hvpXe3ExMUNlz2SVqR5vlZE%2Bi%2FJWqdra2Zfj5T0tx2rYfuvD6NFdANrjn1LiVf5Fo5FAyj%2FR7f4ORkeiu%2FMPfVSgoxQlL%2BvIyi05lBIdG9dm1O9VfvX3WtapqpTSx0NELG%2FLVqUmcls45%2BdfGSC6G", img: "//img.alicdn.com/imgextra/i3/146120309408356475/TB2XwucbcCO.eBjSZFzXXaRiVXa_!!0-saturn_solar.jpg_210x210.jpg", title: "Apple/苹果 iPhone 7 港版国行现货当天发", now_price: "4388.0", old_price: "4523.71", maney: "22", tag: '热销' },
+        { url: "https://item.taobao.com/item.htm?locate=guessitem-item&spm=a215s.7406091.guessitem.guessitem-0&scm=2027.10987.56932.0&id=525331358959&pvid=2d465ace-9a2c-456c-91af-07012f629c14", img: "//img.alicdn.com/bao/uploaded/i1/1814877258/TB2VBvCqXXXXXXlXFXXXXXXXXXX_!!1814877258.jpg_q50.jpg", title: "出口北欧简欧现代简约创意设计师家具懒人休闲椅单人沙发椅蝴蝶椅", now_price: "618.0", old_price: "111.00", maney: "11789",tag: '热销' },
+        { url: "https://item.taobao.com/item.htm?locate=guessitem-item&spm=a215s.7406091.guessitem.guessitem-11&scm=2027.10987.56932.0&id=40448287184&pvid=92086df9-d82f-4d1c-96aa-2a5265ec3b06", img: "//img.alicdn.com/bao/uploaded/i2/TB1YlaiGXXXXXcmXpXXXXXXXXXX_!!0-item_pic.jpg_q50.jpg", title: "愫居  实木储物架 组合置物架 黑胡桃 橡木木蜡油 环保 实体店", now_price: "2185.0", old_price: "111.00", maney: "22", tag: '热销' },
+        { url: "https://item.taobao.com/item.htm?locate=guessitem-item&spm=a215s.7406091.guessitem.guessitem-15&scm=2027.10987.56932.0&id=44770809803&pvid=92086df9-d82f-4d1c-96aa-2a5265ec3b06", img: "//img.alicdn.com/bao/uploaded/i4/851960095/TB2lOFUgVXXXXaEXpXXXXXXXXXX_!!851960095.jpg_q50.jpg", title: "[为你推荐]北欧风格家具 小户型真皮沙发简约皮艺组合韩式双三人位头层牛皮", now_price: "3599.0", old_price: "111.00", maney: "22", tag: '热销' },
+        { url: "https://mclick.simba.taobao.com/cc_im?p=iphone7&s=1381095274&k=289&e=VKtxAOAXQp76tcv4X0wDkpvITRdkOaqZzrPlqVOg5EeyR08VbxXX4e6nTUMqj%2FdPMNE4YJm527ZpNANDY4nOsAjyVKf%2Fc1%2BnLavBN2kQWSguvgH9egsj6E3%2B8mjnYYh7H571VV4Bua7hvpXe3ExMUNlz2SVqR5vlZE%2Bi%2FJWqdra2Zfj5T0tx2rYfuvD6NFdANrjn1LiVf5Fo5FAyj%2FR7f4ORkeiu%2FMPfVSgoxQlL%2BvIyi05lBIdG9dm1O9VfvX3WtapqpTSx0NELG%2FLVqUmcls45%2BdfGSC6G", img: "//img.alicdn.com/imgextra/i3/146120309408356475/TB2XwucbcCO.eBjSZFzXXaRiVXa_!!0-saturn_solar.jpg_210x210.jpg", title: "Apple/苹果 iPhone 7 港版国行现货当天发", now_price: "4388.0", old_price: "4523.71", maney: "22", tag: '热销' },
+      ]
 
     };
   },
   methods: {
     clickDo(key) {
-      this.msg = key;
+      alert(key);
+    },
+    onRefresh (done) {
+      let self = this
+      setTimeout(function () {
+        self.time = new Date()
+        done()  // call done
+      }, 2000)
+    },
+    onInfinite (done) {
+      console.log('infinite');
     },
 
   },
-  // mounted () {
-  //   console.log('ready ok')
-  //   vue.Mdropload(
-  //     document.querySelector('.page-content'),
-  //     {
-  //       height: 50,
-  //       up: {
-  //         fn: function (cb) {
-  //           console.log('触发了下拉操作')
-  //           setTimeout(function () {
-  //             cb.success()
-  //           }, 5000)
-  //         },
-  //         template: {
-  //           none: '下拉刷新',
-  //           message: '释放更新',
-  //           loading: '正在更新，请稍后',
-  //           success: '刷新成功',
-  //           error: '刷新失败'
-  //         }
-  //       },
-  //       down: {
-  //         fn: function (cb) {
-  //           console.log('触发了上拉操作')
-  //           cb.success()
-  //         },
-  //         template: {
-  //           none: '上拉刷新',
-  //           message: '释放更新',
-  //           loading: '正在更新，请稍后',
-  //           success: '刷新成功',
-  //           error: '刷新失败'
-  //         }
-  //       }
-  //     }
-  //   )
-  // },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../components/tobe/function";
 
 .home-bar + .page-content{
@@ -286,7 +289,7 @@ export default {
     text-align: center;
   }
 }
-.my-swipe {
+.page .my-swipe {
   height: rem(118*2);
   color: #fff;
   text-align: center;
@@ -345,9 +348,6 @@ export default {
     }
   }
 }
-.page-content{
-  bottom: rem(100);
-}
 
 .buy-flash{
   overflow: hidden;
@@ -368,58 +368,6 @@ export default {
     .grid-item{
       height: rem(196.88);
     }
-  }
-}
-
-.grid{
-  overflow: hidden;
-  .grid-item{
-    float: left;
-    height: rem(190);
-    position: relative;
-    &:before {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 0;
-        left: auto;
-        bottom: auto;
-        width: 1px;
-        height: 100%;
-        background-color: #efefef;
-        display: block;
-        z-index: 15;
-        transform-origin: 100% 50%;
-        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
-            transform: scaleX(0.5);
-        }
-
-    }
-    @include hairline(bottom, #efefef);
-  }
-  &.grid-two{
-    .grid-item{
-      width: 50%;
-    }
-
-  }
-  &.grid-three{
-
-    .grid-item{
-      width: 33.33%;
-    }
-  }
-  &.grid-four{
-    .grid-item{
-      width: 40%;
-    }
-
-  }
-  &.grid-six{
-    .grid-item{
-      width: 60%;
-    }
-
   }
 }
 
@@ -478,8 +426,83 @@ export default {
     height: rem(114.58*4);
     .grid-item{
       height: rem(114.58*2);
+      width: 100%;
     }
   }
 }
 
+.grid{
+  overflow: hidden;
+  zoom: 1;
+  .grid-item{
+    float: left;
+    position: relative;
+    z-index: 2;
+    font-size: 0;
+    &:before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      left: auto;
+      bottom: auto;
+      width: 1px;
+      height: 100%;
+      background-color: #efefef;
+      display: block;
+      z-index: 15;
+      transform-origin: 100% 50%;
+      @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+        transform: scaleX(0.5);
+      }
+
+    }
+
+    @include hairline(bottom, #efefef);
+    img{
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      margin: auto;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      // left: 50%;
+      // top: 50%;
+      // @include transform(translate3d(-50%, -50%, 0)!important);
+    }
+  }
+  &.grid-two{
+    .grid-item{
+      width: 50%;
+    }
+
+  }
+  &.grid-three{
+
+    .grid-item{
+      width: 33.33%;
+    }
+  }
+  &.grid-four{
+    .grid-item{
+      width: 40%;
+    }
+
+  }
+  &.grid-six{
+    .grid-item{
+      width: 60%;
+    }
+
+  }
+}
+.love-inner .tag.orange{
+  @include transform(scale(.8));
+  background-color: #d91c29;
+  color: #fff;
+  border-radius: 3px;
+}
 </style>
