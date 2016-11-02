@@ -2,12 +2,10 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import FastClick from 'fastclick';
 import VueLazyload from 'vue-lazyload';
-// import VueResource from 'vue-resource';
-// import Vuex from 'vuex';
 
 import BackLink from './directives/back-link';
 
-import {routes} from './router';
+import { routes } from './router';
 
 import App from './views/index';
 import Class from './views/class';
@@ -27,12 +25,6 @@ Vue.use(VueLazyload, {
   attempt: 1
 });
 
-// Vue-resource
-// Vue.use(VueResource);
-
-// Vuex
-// Vue.use(Vuex);
-
 // Vue-router
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -42,6 +34,7 @@ const router = new VueRouter({
 
 const app = new Vue({
   router,
+  store,
 }).$mount('#app');
 
 

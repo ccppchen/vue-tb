@@ -42,11 +42,11 @@
           </div>
         </div>
         <div class="buy-flash">
-          <div class="buy-rob">
-            <router-link :to="data.buyFlashs.flashBuy.url"><img :src="data.buyFlashs.flashBuy.img"></router-link>
+          <div class="buy-rob" v-for="flash in data.flashBuy">
+            <router-link :to="flash.url"><img :src="flash.img"></router-link>
           </div>
           <div class="buy-list grid grid-two">
-            <div class="buy-list-item grid-item" v-for="flashList in data.buyFlashs.flashLists">
+            <div class="buy-list-item grid-item" v-for="flashList in data.flashLists">
               <router-link :to="flashList.url"><img :src="flashList.img"></router-link>
             </div>
           </div>
@@ -58,12 +58,12 @@
           </div>
           <div class="bargain-inner grid">
             <div class="bargain-left grid">
-              <div class="grid-item" v-for="bargainLeft in data.bargains.bargainLefts">
+              <div class="grid-item" v-for="bargainLeft in data.bargainLefts">
                 <router-link :to="bargainLeft.url"><img v-lazy="bargainLeft.img"></router-link>
               </div>
             </div>
             <div class="bargain-right grid grid-three">
-              <div class="grid-item" v-for="bargainRight in data.bargains.bargainRights">
+              <div class="grid-item" v-for="bargainRight in data.bargainRights">
                 <router-link :to="bargainRight.url"><img v-lazy="bargainRight.img"></router-link>
               </div>
             </div>
@@ -76,12 +76,12 @@
           </div>
           <div class="bargain-inner grid">
             <div class="bargain-left grid">
-              <div class="grid-item" v-for="specialLeft in data.specials.specialLefts">
+              <div class="grid-item" v-for="specialLeft in data.specialLefts">
                 <router-link :to="specialLeft.url"><img v-lazy="specialLeft.img"></router-link>
               </div>
             </div>
             <div class="bargain-right grid grid-three">
-              <div class="grid-item" v-for="specialRight in data.specials.specialRights">
+              <div class="grid-item" v-for="specialRight in data.specialRights">
                 <router-link :to="specialRight.url"><img v-lazy="specialRight.img"></router-link>
               </div>
             </div>
@@ -103,7 +103,7 @@
             <div class="column-text">实时推荐最适合你的宝贝</div>
           </div>
         </div>
-        <!-- <similar :similarColumn="'similar-two'" :myClass="'love-inner'">
+        <similar :similarColumn="'similar-two'" :myClass="'love-inner'">
           <similar-item v-for="similar in similars">
             <a :href="similar.url">
               <div class="similar-img"><img v-lazy="similar.img"></div>
@@ -118,8 +118,7 @@
 
             </div>
           </similar-item>
-        </similar> -->
-
+        </similar>
       </scroll>
 
     </page-content>
@@ -133,6 +132,8 @@ import { Swipe, SwipeItem } from '../components/vue-swipe';
 import Tag from '../components/tag';
 import { Similar, SimilarItem } from '../components/similar';
 import Scroll from '../components/scroll';
+import { mapGetters, mapActions } from 'vuex';
+import api from '../api';
 export default {
   components: {
     Page,
@@ -144,34 +145,42 @@ export default {
     SimilarItem,
     Scroll,
   },
-  data() {
-    return {
-      data: {}
+  // data() {
+  //   return {
+  //     data: {}
 
-    };
+  //   };
+  // },
+  // mounted () {
+  //   // GET /someUrl
+  //   this.$http.get('http://localhost:3000/vue/vuetb',{}, {emulateJSON: true}).then((response) => {
+  //     // success callback
+  //     this.data = response.data;
+  //   }, (response) => {
+  //     // error callback
+  //   });
+  // },
+  computed: {
+    ...mapGetters({
+      data: 'allHomeResource',
+      similars: 'getProducts',
+    }),
   },
-  mounted () {
-    // GET /someUrl
-    this.$http.get('http://localhost:3000/vue/vuetb',{}, {emulateJSON: true}).then((response) => {
-      // success callback
-      this.data = response.data;
-    }, (response) => {
-      // error callback
-    });
+  created () {
+    this.$store.dispatch('getAllClass')
   },
   methods: {
-    clickDo(key) {
-      alert(key);
-    },
     onRefresh (done) {
-      let self = this
-      setTimeout(function () {
-        self.time = new Date()
-        done()  // call done
-      }, 2000)
+      this.$store.dispatch('getAllClass').then(response => {
+        done();
+      }, (response) => {
+
+      })
     },
     onInfinite (done) {
       console.log('infinite');
+      this.$store.dispatch('getProducts')
+      done()
     },
 
   },

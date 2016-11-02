@@ -7,9 +7,9 @@ const state = {
 
 // mutations
 const mutations = {
-  [types.HOME_RESOURCES] (state, { homeresource }) {
-    state.all = homeresource
-  },
+  [types.RECEIVE_PRODUCTS] (state, { response }) {
+    state.all = response.body
+  }
 }
 
 export default {
