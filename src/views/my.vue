@@ -15,7 +15,7 @@
       <scroll :on-refresh="onRefresh" :enableInfinite="false">
         <div class="my-title-box">
           <div><img class="user-photo" src="//gw.alicdn.com/tfscom/TB1_n4PKXXXXXcYXXXXNx3t4VXX-120-120.jpg_q30"></div>
-          <p class="user-nime">陈鹏2016</p>
+          <p class="user-nime" v-once v-cloak>{{ user }}</p>
         </div>
         <list class="column-wrap">
           <list-item :url="'/class'" :leftText="'我的订单'" :rightText="'查看全部订单'" :rightClass="'small-font'"></list-item>
@@ -96,6 +96,7 @@
 import { Page, PageContent } from '../components/page';
 import Scroll from '../components/scroll';
 import { List, ListItem } from '../components/list';
+import db from '../db';
 
 export default {
   components: {
@@ -107,10 +108,15 @@ export default {
   },
   data() {
     return {
-      // headIcons: [
-      //   { icon: 'more-v', href: 'https://www.baidu.com' }
-      // ],
+      user: '',
     };
+  },
+  created() {
+    if (db.get('user') === null) {
+      this.$router.push('/login')
+    }else {
+      this.user = db.get('user');
+    }
   },
   methods: {
     onRefresh (done) {

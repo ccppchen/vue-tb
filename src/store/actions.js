@@ -18,22 +18,34 @@ export const getAllClass = ({ commit }) => {
       commit(types.RECEIVE_HOMES, { response })
       resolve()
     }, (response) => {
-
+      console.log('fail');
     })
   })
 
 }
 
-export const getProducts = ({ commit }) => {
+export const getProducts = ({ commit, state }, parms) => {
   return new Promise((resolve, reject) => {
 
-    api.getProducts().then(response => {
+    api.getProducts(parms).then(response => {
       // suucess calback
       commit(types.RECEIVE_PRODUCTS, { response })
+      commit(types.CURRENT_PRODUCTS, { response })
       resolve()
-
     }, (response) => {
       // fail callback
+      console.log('fail');
     })
+    // api.getProducts({
+    //   limit: 10,
+    //   page: 1
+    // }).then(response => {
+    //   // suucess calback
+    //   commit(types.RECEIVE_PRODUCTS, { response })
+    //   resolve()
+    // }, (response) => {
+    //   // fail callback
+    //   console.log('fail');
+    // })
   })
 }

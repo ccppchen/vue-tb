@@ -5,20 +5,20 @@
         <i class="iconfont scan"></i>
         <div class="bar-text">扫一扫</div>
       </div>
-      <div class="home-bar-content">
+      <router-link tag="div" class="home-bar-content" :to="'/search'">
         <div class="iconfont search"></div>
         <div class="inner-input">
           品牌手机实惠购
         </div>
         <div class="iconfont camera"></div>
-      </div>
+      </router-link>
       <div class="home-bar-right">
         <i class="iconfont message"></i>
         <div class="bar-text">消息</div>
       </div>
     </div>
-    <page-content>
-      <scroll :on-refresh="onRefresh" :on-infinite="onInfinite">
+    <page-content id="container">
+      <scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :enableInfinite="isLoading">
 
         <swipe class="my-swipe" :prevent="true">
           <swipe-item v-for="swipeItem in data.swipeItems">
@@ -59,12 +59,12 @@
           <div class="bargain-inner grid">
             <div class="bargain-left grid">
               <div class="grid-item" v-for="bargainLeft in data.bargainLefts">
-                <router-link :to="bargainLeft.url"><img v-lazy="bargainLeft.img"></router-link>
+                <router-link :to="bargainLeft.url"><img v-lazy.container="bargainLeft.img"></router-link>
               </div>
             </div>
             <div class="bargain-right grid grid-three">
               <div class="grid-item" v-for="bargainRight in data.bargainRights">
-                <router-link :to="bargainRight.url"><img v-lazy="bargainRight.img"></router-link>
+                <router-link :to="bargainRight.url"><img v-lazy.container="bargainRight.img"></router-link>
               </div>
             </div>
           </div>
@@ -77,12 +77,12 @@
           <div class="bargain-inner grid">
             <div class="bargain-left grid">
               <div class="grid-item" v-for="specialLeft in data.specialLefts">
-                <router-link :to="specialLeft.url"><img v-lazy="specialLeft.img"></router-link>
+                <router-link :to="specialLeft.url"><img v-lazy.container="specialLeft.img"></router-link>
               </div>
             </div>
             <div class="bargain-right grid grid-three">
               <div class="grid-item" v-for="specialRight in data.specialRights">
-                <router-link :to="specialRight.url"><img v-lazy="specialRight.img"></router-link>
+                <router-link :to="specialRight.url"><img v-lazy.container="specialRight.img"></router-link>
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@
         <swipe class="swipead-swipe" :prevent="true" :showIndicators="false">
           <swipe-item v-for="swipeAdItem in data.swipeAdItems">
             <a :href="swipeAdItem.url">
-              <img v-lazy="swipeAdItem.img">
+              <img v-lazy.container="swipeAdItem.img">
             </a>
           </swipe-item>
         </swipe>
@@ -106,23 +106,23 @@
         <similar :similarColumn="'similar-two'" :myClass="'love-inner'">
           <similar-item v-for="similar in similars">
             <a :href="similar.url">
-              <div class="similar-img"><img v-lazy="similar.img"></div>
+              <div class="similar-img lazy-box"><img class="lazy" v-lazy.container="similar.img"></div>
               <div class="similar-title"><tag v-if="similar.tag !== ''">{{ similar.tag }}</tag>{{ similar.title }}</div>
             </a>
             <div class="similar-price">
-                <span class="small-rmb">¥</span>{{ similar.now_price }}
-                <div class="join-cart">
-                  <div class="similar-maney">{{ similar.maney }}人付款</div>
-                  <div class="iconfont more-v"></div>
-                </div>
+              <span class="small-rmb">¥</span>{{ similar.now_price }}
+              <div class="join-cart">
+                <div class="similar-maney">{{ similar.maney }}人付款</div>
+                <div class="iconfont more-v"></div>
+              </div>
 
             </div>
           </similar-item>
+          <div class="similar-no" v-if="isNone">-&nbsp;没有了&nbsp;-</div>
         </similar>
       </scroll>
 
     </page-content>
-
   </page>
 </template>
 
@@ -132,8 +132,10 @@ import { Swipe, SwipeItem } from '../components/vue-swipe';
 import Tag from '../components/tag';
 import { Similar, SimilarItem } from '../components/similar';
 import Scroll from '../components/scroll';
+
 import { mapGetters, mapActions } from 'vuex';
 import api from '../api';
+
 export default {
   components: {
     Page,
@@ -145,12 +147,15 @@ export default {
     SimilarItem,
     Scroll,
   },
-  // data() {
-  //   return {
-  //     data: {}
-
-  //   };
-  // },
+  data() {
+    return {
+      defaultPage: 1,
+      defaultLimit: 6,
+      isLoading: true,
+      isNone: false,
+      showToast: false,
+    };
+  },
   // mounted () {
   //   // GET /someUrl
   //   this.$http.get('http://localhost:3000/vue/vuetb',{}, {emulateJSON: true}).then((response) => {
@@ -164,23 +169,34 @@ export default {
     ...mapGetters({
       data: 'allHomeResource',
       similars: 'getProducts',
+      current: 'currentProducts'
     }),
   },
   created () {
     this.$store.dispatch('getAllClass')
+    this.similars.length = 0;
+    this.data.length = 0;
   },
   methods: {
     onRefresh (done) {
+      this.data.length = 0;
       this.$store.dispatch('getAllClass').then(response => {
         done();
       }, (response) => {
-
+        alert('刷新失败')
       })
     },
     onInfinite (done) {
-      console.log('infinite');
-      this.$store.dispatch('getProducts')
-      done()
+      this.$store.dispatch('getProducts', { limit: this.defaultLimit, page: this.defaultPage++ }).then(response => {
+        if (this.current.length < this.defaultLimit) {
+          // alert('没有了')
+          this.isNone = true
+          this.isLoading = false;
+        }
+        done();
+      }, (response) => {
+        alert('上拉失败')
+      })
     },
 
   },
@@ -445,5 +461,11 @@ export default {
   background-color: #d91c29;
   color: #fff;
   border-radius: 3px;
+}
+.similar-no{
+  padding: rem(20) 0;
+  font-size: rem(28);
+  color: #999;
+  text-align: center;
 }
 </style>

@@ -206,12 +206,6 @@ textarea {
     vertical-align: top; // 2
 }
 
-// Don't inherit the `font-weight` (applied by a rule above).
-// NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
-optgroup {
-  font-weight: bold;
-}
-
 // Remove most spacing between table cells
 table {
     border-collapse: collapse;
@@ -290,4 +284,11 @@ a{
 // fix fastclick bug: https://github.com/ftlabs/fastclick/issues/60
 label > * {
   pointer-events: none;
+}
+
+// vue lazyloading
+img[lazy=loading] {
+  width: 85%!important;
+  height: auto!important;
+  margin: auto;
 }

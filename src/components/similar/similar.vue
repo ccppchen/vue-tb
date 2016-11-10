@@ -25,6 +25,9 @@
   .similar-item{
     display: inline-block;
     vertical-align: top;
+    .similar-img{
+      text-align: center;
+    }
   }
   .similar-ul{
     font-size: 0;

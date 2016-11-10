@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-tabs">
     <page-footer>
       <div class="footer-item" :class="{'active' : currentView === 'home'}" @click="changeView('home')"><a href="javascript:;"><i class="iconfont" :class="[currentView === 'home' ? 'homefill' : 'home']"></i><div class="tab-tro">首页</div></a></div>
       <div class="footer-item" :class="{'active' : currentView === 'we'}" @click="changeView('we')"><a href="javascript:;"><i class="iconfont we" :class="[currentView === 'we' ? 'wefill' : 'we']"></i><div class="tab-tro">微淘</div></a></div>
@@ -40,5 +40,9 @@
 
 <style lang="scss">
 @import "../components/tobe/base";
+@import "../components/tobe/function";
 @import "../components/tobe/icons";
+.lazy-box{
+  @extend %lazy-box;
+}
 </style>
