@@ -32,7 +32,7 @@ Vue.use(VueLazyload, {
 // Vue-router
 Vue.use(VueRouter);
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   routes,
 });
 router.beforeEach((to, from, next) => {
