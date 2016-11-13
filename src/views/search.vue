@@ -64,7 +64,7 @@ export default {
     return {
       searchText: '',
       searchHistory: true,
-      searchHistoryText: window.JSON.parse(localdb.get('searchHistoryText')) || '[]',
+      searchHistoryText: window.JSON.parse(localdb.get('searchHistoryText') || '[]'),
       words: []
     };
   },

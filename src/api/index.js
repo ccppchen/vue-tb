@@ -4,7 +4,7 @@ import VueResource from 'vue-resource';
 Vue.use(VueResource);
 Vue.http.options.xhr = { withCredentials: true };
 
-const baseUrl = 'http://localhost:3000';
+const baseUrl = 'http://52.207.228.30';
 
 export default {
   getHomeResources: (params) => {
