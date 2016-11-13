@@ -25,7 +25,7 @@ Vue.directive('focus', Focus);
 Vue.use(VueLazyload, {
   preLoad: 1,
   error: 'static/assets/lazy/error.png',
-  loading: '',
+  loading: 'static/assets/lazy/lazy-default-img.png',
   attempt: 1
 });
 
